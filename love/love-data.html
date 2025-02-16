@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>给你的小惊喜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-image: url('./hellokitty.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .container {
+            width: 85%;
+            max-width: 400px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        h1 {
+            color: #ff69b4;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        button {
+            width: 200px;
+            padding: 15px 0;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            font-weight: bold;
+        }
+
+        #acceptBtn {
+            background-color: #ff69b4;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+        }
+
+        #rejectBtn {
+            background-color: #a8a8a8;
+            color: white;
+            box-shadow: 0 4px 15px rgba(168, 168, 168, 0.3);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #acceptBtn:hover {
+            background-color: #ff4da6;
+            transform: translateY(-2px);
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 20px;
+            animation: floatHeart 4s linear infinite;
+        }
+
+        @keyframes floatHeart {
+            0% {
+                transform: translateY(0) rotate(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+    <div class="container">
+        <h1>你愿意做我女朋友吗？</h1>
+        <div class="buttons">
+            <button id="acceptBtn" onclick="accept()">愿意</button>
+            <button id="rejectBtn" onclick="reject()">不愿意</button>
+        </div>
+    </div>
+
+    <script>
+        let rejectCount = 0;
+        const rejectMessages = [
+            "再考虑一下嘛～",
+            "不要这么快拒绝嘛！",
+            "你确定吗？",
+            "再想想呗～",
+            "别这样嘛～",
+            "你忍心拒绝我吗？",
+            "给个机会呗！",
+            "真的不再考虑一下吗？",
+            "你这样我会难过的～",
+            "求你啦～"
+        ];
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            heart.style.color = `rgb(${Math.random() * 255}, ${Math.random() * 100}, ${Math.random() * 100})`;
+            document.getElementById('hearts').appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }
+
+        setInterval(createHeart, 500);
+
+        function accept() {
+            alert("我也喜欢你！❤");
+            window.location.href = "success.html";
+        }
+
+        function reject() {
+            rejectCount++;
+            if (rejectCount >= 30) {
+                alert("你已经拒绝了这么多次，不要再拒绝了～");
+                rejectCount = 0;
+                return;
+            }
+            const messageIndex = Math.floor(Math.random() * rejectMessages.length);
+            alert(rejectMessages[messageIndex]);
+        }
+
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
